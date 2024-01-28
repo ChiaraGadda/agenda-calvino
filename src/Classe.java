@@ -23,7 +23,7 @@ public class Classe {
         Boolean isValidInsert = true;
         for (int i = 0 ; i < classJsonArray.size(); i++) {
             JSONObject objClass = (JSONObject) classJsonArray.get(i);
-            if ((String) objClass.get("denominazione") == denominazione) {
+            if (denominazione.equals((String) objClass.get("denominazione"))) {
                 isValidInsert = false;
                 break;
             }
