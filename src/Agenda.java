@@ -5,11 +5,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Agenda {
-    Map<String,JsonAPI> InstancesJsonAPI = new HashMap<>();
+    Map<String,JsonAPI> InstancesJsonAPI = new HashMap<String,JsonAPI>();
 
     public Agenda() {
-        InstancesJsonAPI.put("classes", new JsonAPI("classes", "denominazione"));
-        InstancesJsonAPI.put("students", new JsonAPI("students", "codiceFisc"));
+        System.out.println("*");
+       // InstancesJsonAPI = new HashMap<>();
+        InstancesJsonAPI.put("classes", new JsonAPI("classes"/* , "denominazione"*/));
+        InstancesJsonAPI.put("students", new JsonAPI("students"/* , "codiceFisc" */));
     }
 
     public String insclasse(String denominazione, String codiceAula) {
@@ -62,7 +64,35 @@ public class Agenda {
 
         return "Cancellazione fallita... Studente presente che afferisce alla classe!";
     }
+    
+    public String insstudente(String nome, String cognome, String codFisc, String classe){
+        Boolean classExist = false;
+        JsonAPI classesJsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
+        JSONArray classes = (JSONArray) classesJsonAPI.getData();
+        for(int i=0; i<classes.size(); i++){
+            JSONObject objClass = (JSONObject) classes.get(i);
+            String denominazione = (String) objClass.get("denominazione");
+            if(denominazione.equals(classe)){
+                classExist=true;
+                break;
+            }
+        }
+        if(!classExist)
+            return "ERRORE: la classe non esiste";
+        
+        JsonAPI studenteJsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
+        JSONArray studenti = (JSONArray) studenteJsonAPI.getData();
+        for(int i=0; i<studenti.size(); i++){
+            JSONObject objStudent = (JSONObject) studenti.get(i);
+            if(codFisc.equals(objStudent.get("codFisc"))){
+                return "ERRORE: studente duplicato";
+            }
+        }
 
+        Studente s1=new Studente(nome, cognome, codFisc, classe, studenteJsonAPI);
+        s1.insStudente();
+        return "";
+    }
     public String zap() {
         for (Map.Entry<String, JsonAPI> entry : InstancesJsonAPI.entrySet()) {
             JsonAPI instanceJsonAPI = entry.getValue();

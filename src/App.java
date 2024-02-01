@@ -11,7 +11,7 @@ public class App {
             System.out.println("Inserisci un comando...");
             Scanner input = new Scanner(System.in);
             shellLine = input.nextLine();
-            String[] tokens = shellLine.split("\\s+");
+            String[] tokens = shellLine.split("\\s+"); //significa uno o più spazi-per approf. ved regex: espressioni regolari
 
             String shellCommand = tokens[0];
             String[] shellArgs = (tokens.length > 1) ? tokens[1].split(",") : null;
@@ -40,6 +40,14 @@ public class App {
                     }
                     break;
 
+                case "insstudente":
+                    if (shellArgs != null && shellArgs.length == 4) {
+                        String message = Agenda.insstudente(shellArgs[0], shellArgs[1], shellArgs[2], shellArgs[3]);
+                        System.out.println(message);
+                    } else {
+                        System.out.println("Formato del comando non corretto. Utilizzo corretto: insstudente <Nome> ecc");
+                    }
+                    break;
                 case "zap":
                     String message = Agenda.zap();
                     System.out.println(message);

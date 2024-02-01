@@ -12,15 +12,15 @@ import org.json.simple.parser.ParseException;
 
 public class JsonAPI {
     String nomeFile;
-    String primaryKey;
+    // String primaryKey; //chiave primaria della tabella (denominazione classe, codFiscale alunni)
 
     JSONArray data;
     Boolean cached;
 
-    public JsonAPI(String nome, String primaryKey) {
+    public JsonAPI(String nome/* , String primaryKey*/) {
         this.cached = false;
         this.nomeFile = nome;
-        this.primaryKey = primaryKey;
+        // this.primaryKey = primaryKey;
     }
 
     private String percorso() {
@@ -67,7 +67,7 @@ public class JsonAPI {
         }
     }
 
-    public void clear() {
+    public void clear() {//zap sul file
         try (FileWriter fileWriter = new FileWriter(percorso())) {
             fileWriter.write(new JSONArray().toJSONString());
             cached = false;
