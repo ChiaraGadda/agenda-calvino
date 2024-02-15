@@ -25,6 +25,11 @@ public class Agenda {
         return jsonAPI.getData().toString();
     }
 
+    public String liststudenti() {
+        JsonAPI jsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
+        return jsonAPI.getData().toString();
+    }
+
     public String delclasse(String denominazione) {
         JsonAPI studenteJsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
         JSONArray studenti = (JSONArray) studenteJsonAPI.getData();

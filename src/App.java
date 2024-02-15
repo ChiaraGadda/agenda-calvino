@@ -1,5 +1,9 @@
 import java.util.Scanner;
-
+//comandi da fare: 
+// delstudente [<codiceFiscale>]
+// modclasse [<NomeClasse  >] [ <codiceAula> ]
+// modstudente [<codiceFiscale>] [<Cognome>,<Nome>,<classeFreq>]
+// liststudente all [<NomeClasse >]
 public class App {
     public static void main(String[] args) throws Exception {
         helper();
@@ -40,6 +44,11 @@ public class App {
                     }
                     break;
 
+                case "liststudenti":
+                    String studentsList = Agenda.liststudenti();
+                    System.out.println(studentsList);
+                    break;
+
                 case "insstudente":
                     if (shellArgs != null && shellArgs.length == 4) {
                         String message = Agenda.insstudente(shellArgs[0], shellArgs[1], shellArgs[2], shellArgs[3]);
@@ -48,6 +57,7 @@ public class App {
                         System.out.println("Formato del comando non corretto. Utilizzo corretto: insstudente <Nome> ecc");
                     }
                     break;
+ 
                 case "zap":
                     String message = Agenda.zap();
                     System.out.println(message);
@@ -61,7 +71,8 @@ public class App {
 
                 default:
                     // Utilizzo lo stato 1 per un'uscita anomala
-                    System.exit(1);
+                    System.out.println("comando non valido");
+                    //System.exit(1);
                     break;
             }
 
@@ -75,6 +86,9 @@ public class App {
         System.out.println("- insclasse [<NomeClasse>,<codiceAula>]");
         System.out.println("- delclasse [<NomeClasse>]");
         System.out.println("- listclasse");
+        System.out.println("- insstudente [<Cognome>,<Nome>,<codiceFiscale>,<classeFreq>]");
+        System.out.println("- liststudenti");
+        System.out.println("- zap");
         System.out.println("esempio: insclasse 2bii,A3");
     }
 }
