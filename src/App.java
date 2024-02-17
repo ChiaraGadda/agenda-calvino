@@ -58,6 +58,12 @@ public class App {
                     }
                     break;
  
+                case "delstudente":
+                    if(shellArgs != null && shellArgs.length == 1){
+                        String message = Agenda.delstudente(shellArgs[0]);
+                        System.out.println(message);
+                    }
+                    break;
                 case "zap":
                     String message = Agenda.zap();
                     System.out.println(message);

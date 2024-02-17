@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.*;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,12 +23,14 @@ public class Agenda {
 
     public String listclasse() {
         JsonAPI jsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
-        return jsonAPI.getData().toString();
+        JSONArray classes = jsonAPI.getData();
+        return bellalista(classes);
     }
 
     public String liststudenti() {
         JsonAPI jsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
-        return jsonAPI.getData().toString();
+        JSONArray studenti = jsonAPI.getData();
+        return bellalista(studenti);
     }
 
     public String delclasse(String denominazione) {
@@ -70,6 +73,25 @@ public class Agenda {
         return "Cancellazione fallita... Studente presente che afferisce alla classe!";
     }
     
+    public String delstudente(String codFisc){
+        JsonAPI studentsJsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
+        JSONArray /* <JSONObject> */ newStudenti = new JSONArray /* <JSONObject> */();
+        //ArrayList <Integer> newstudneti = new ArrayList <Integer>();
+        JSONArray studenti = (JSONArray) studentsJsonAPI.getData();
+        for(int i=0; i<studenti.size(); i++){
+            JSONObject objStudent = (JSONObject) studenti.get(i);
+            if(!objStudent.get("codFisc").equals(codFisc)){
+                newStudenti.add(objStudent);
+            }
+        }
+        String message = "studente inesistente"; // message = "studente eliminato!";
+        if(newStudenti.size()!=studenti.size()){
+            studentsJsonAPI.updateJsonFile(newStudenti);
+            message = "studente eliminato!";
+        }
+        return message;
+    }
+
     public String insstudente(String nome, String cognome, String codFisc, String classe){
         Boolean classExist = false;
         JsonAPI classesJsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
@@ -96,8 +118,9 @@ public class Agenda {
 
         Studente s1=new Studente(nome, cognome, codFisc, classe, studenteJsonAPI);
         s1.insStudente();
-        return "";
+        return "Studente inserito";
     }
+
     public String zap() {
         for (Map.Entry<String, JsonAPI> entry : InstancesJsonAPI.entrySet()) {
             JsonAPI instanceJsonAPI = entry.getValue();
@@ -105,5 +128,33 @@ public class Agenda {
         }
 
         return "Eliminazione DB completato";
+    }
+
+    // private String bellalista(JSONArray jsonArray){
+    //     String stringa="[";
+    //     if(jsonArray.size()>0){
+    //         stringa+= "\n";
+    //     }
+    //     for(int i=0; i<jsonArray.size(); i++){
+    //         JSONObject objClass = (JSONObject) jsonArray.get(i);
+    //         stringa+=("\t"+objClass.toString()+",\n");
+    //     }
+    //     if(jsonArray.size()>0){
+    //         stringa+=(stringa.substring(0, stringa.length() - 1)+"\n");
+    //     }
+    //     return stringa+"]";
+    // }
+
+    private String bellalista(JSONArray jsonArray){
+        if(jsonArray.size()==0){
+            return "[]";
+        }
+        String stringa="[\n";
+        for(int i=0; i<jsonArray.size(); i++){
+            JSONObject objClass = (JSONObject) jsonArray.get(i);
+            stringa+=("\t"+objClass.toString()+",\n");
+        }
+        stringa=stringa.substring(0, stringa.length() - 2);
+        return (stringa+"\n]");
     }
 }
