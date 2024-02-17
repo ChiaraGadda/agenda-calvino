@@ -73,6 +73,27 @@ public class Agenda {
         return "Cancellazione fallita... Studente presente che afferisce alla classe!";
     }
     
+    public String modclasse(String denominazione, String codiceAula){
+        JsonAPI classesJsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
+        JSONArray classi = (JSONArray) classesJsonAPI.getData();
+        
+        boolean flagEditing = false;
+        for(int i=0; i<classi.size(); i++){
+            JSONObject objClass = (JSONObject) classi.get(i);
+            if(objClass.get("denominazione").equals(denominazione)){
+                flagEditing=true;
+                objClass.put("codiceAula", codiceAula);
+                break;
+            }
+        }
+        String message= "classe non trovata";
+        if(flagEditing){
+            message = "classe modificata!";
+            classesJsonAPI.updateJsonFile(classi);
+        }
+        return message;
+    }
+
     public String modstudente (String codFisc, String cognome, String nome, String classe){
         JsonAPI classesJsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
         JSONArray classi = (JSONArray) classesJsonAPI.getData();

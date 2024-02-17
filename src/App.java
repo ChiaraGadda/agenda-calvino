@@ -1,7 +1,6 @@
 import java.util.Scanner;
 //comandi da fare: 
 // modclasse [<NomeClasse>] [ <codiceAula> ]
-// modstudente [<codiceFiscale>] [<Cognome>,<Nome>,<classeFreq>]
 public class App {
     public static void main(String[] args) throws Exception {
         helper();
@@ -33,6 +32,12 @@ public class App {
                     System.out.println(classesList);
                     break;
                 
+                case "modclasse":
+                    if(shellArgs != null && shellArgs.length ==2){
+                        String message = Agenda.modclasse(shellArgs[0], shellArgs[1]);
+                        System.out.println(message);
+                    }
+                    break;
                 case "delclasse":
                     if (shellArgs != null && shellArgs.length == 1) {
                         String message = Agenda.delclasse(shellArgs[0]);
