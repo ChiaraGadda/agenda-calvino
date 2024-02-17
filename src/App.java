@@ -1,9 +1,7 @@
 import java.util.Scanner;
 //comandi da fare: 
-// delstudente [<codiceFiscale>]
-// modclasse [<NomeClasse  >] [ <codiceAula> ]
+// modclasse [<NomeClasse>] [ <codiceAula> ]
 // modstudente [<codiceFiscale>] [<Cognome>,<Nome>,<classeFreq>]
-// liststudente all [<NomeClasse >]
 public class App {
     public static void main(String[] args) throws Exception {
         helper();
@@ -58,6 +56,12 @@ public class App {
                     }
                     break;
  
+                case "modstudente":
+                    if(shellArgs!= null && shellArgs.length == 4){
+                        String message = Agenda.modstudente(shellArgs[0], shellArgs[1], shellArgs[2], shellArgs[3]);
+                        System.out.println(message);
+                    }
+                    break;
                 case "delstudente":
                     if(shellArgs != null && shellArgs.length == 1){
                         String message = Agenda.delstudente(shellArgs[0]);
@@ -93,6 +97,7 @@ public class App {
         System.out.println("- delclasse [<NomeClasse>]");
         System.out.println("- listclasse");
         System.out.println("- insstudente [<Cognome>,<Nome>,<codiceFiscale>,<classeFreq>]");
+        System.out.println("- delclasse [<codFisc>]");
         System.out.println("- liststudenti");
         System.out.println("- zap");
         System.out.println("esempio: insclasse 2bii,A3");

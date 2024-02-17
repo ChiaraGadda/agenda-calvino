@@ -73,6 +73,51 @@ public class Agenda {
         return "Cancellazione fallita... Studente presente che afferisce alla classe!";
     }
     
+    public String modstudente (String codFisc, String cognome, String nome, String classe){
+        JsonAPI classesJsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
+        JSONArray classi = (JSONArray) classesJsonAPI.getData();
+
+        JsonAPI studentsJsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
+        JSONArray studenti = (JSONArray) studentsJsonAPI.getData();
+
+        // JSONArray newStudenti = new JSONArray();
+
+        boolean flagClasse = false;
+        boolean flagStudent = false;
+        for(int i=0; i<studenti.size(); i++){
+            JSONObject objStudent = (JSONObject) studenti.get(i);
+            if(objStudent.get("codFisc").equals(codFisc)){
+                flagStudent = true;
+                for (int j = 0; j < classi.size(); j++) {
+                    JSONObject objClass = (JSONObject) classi.get(j);
+                    String currentDenominazione = (String) objClass.get("denominazione");
+                    if (currentDenominazione.equals(classe)) {
+                        flagClasse = true;
+                        break;
+                    }
+                }
+                if(flagClasse){
+                    objStudent.put("nome", nome);
+                    objStudent.put("cognome", cognome);
+                    objStudent.put("classe", classe);
+                }
+            }/*  else {
+                newStudenti.add(objStudent);
+            } */
+        }
+        String message = "studente modificato!";
+        if(flagStudent){
+            if(!flagClasse){
+                message = "classe inesistente";
+            }else{
+                studentsJsonAPI.updateJsonFile(studenti);
+            }
+        }else{
+            message= "studente non trovato";
+        }
+        return message;
+    }
+
     public String delstudente(String codFisc){
         JsonAPI studentsJsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
         JSONArray /* <JSONObject> */ newStudenti = new JSONArray /* <JSONObject> */();
@@ -92,7 +137,7 @@ public class Agenda {
         return message;
     }
 
-    public String insstudente(String nome, String cognome, String codFisc, String classe){
+    public String insstudente(String cognome, String nome, String codFisc, String classe){
         Boolean classExist = false;
         JsonAPI classesJsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
         JSONArray classes = (JSONArray) classesJsonAPI.getData();
