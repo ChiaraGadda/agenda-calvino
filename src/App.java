@@ -1,6 +1,5 @@
 import java.util.Scanner;
-//comandi da fare: 
-// modclasse [<NomeClasse>] [ <codiceAula> ]
+
 public class App {
     public static void main(String[] args) throws Exception {
         helper();
