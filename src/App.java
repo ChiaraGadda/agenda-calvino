@@ -6,12 +6,11 @@ public class App {
 
         String shellLine = null;
         Agenda Agenda = new Agenda();
-
+        Scanner input = new Scanner(System.in);
         while (true) {
             System.out.println("Inserisci un comando...");
-            Scanner input = new Scanner(System.in);
             shellLine = input.nextLine();
-            String[] tokens = shellLine.split("\\s+"); //significa uno o più spazi-per approf. ved regex: espressioni regolari
+            String[] tokens = shellLine.split("\\s+");
 
             String shellCommand = tokens[0];
             String[] shellArgs = (tokens.length > 1) ? tokens[1].split(",") : null;
@@ -22,7 +21,8 @@ public class App {
                         String message = Agenda.insclasse(shellArgs[0], shellArgs[1]);
                         System.out.println(message);
                     } else {
-                        System.out.println("Formato del comando non corretto. Utilizzo corretto: insclasse <NomeClasse>,<codiceAula>");
+                        System.out.println(
+                                "Formato del comando non corretto. Utilizzo corretto: insclasse <NomeClasse>,<codiceAula>");
                     }
                     break;
 
@@ -30,9 +30,9 @@ public class App {
                     String classesList = Agenda.listclasse();
                     System.out.println(classesList);
                     break;
-                
+
                 case "modclasse":
-                    if(shellArgs != null && shellArgs.length ==2){
+                    if (shellArgs != null && shellArgs.length == 2) {
                         String message = Agenda.modclasse(shellArgs[0], shellArgs[1]);
                         System.out.println(message);
                     }
@@ -42,13 +42,23 @@ public class App {
                         String message = Agenda.delclasse(shellArgs[0]);
                         System.out.println(message);
                     } else {
-                        System.out.println("Formato del comando non corretto. Utilizzo corretto: delclasse <NomeClasse>");
+                        System.out
+                                .println("Formato del comando non corretto. Utilizzo corretto: delclasse <NomeClasse>");
                     }
                     break;
 
                 case "liststudenti":
-                    String studentsList = Agenda.liststudenti();
-                    System.out.println(studentsList);
+                    if (shellArgs != null && shellArgs.length == 1) {
+                        if (shellArgs[0] == "all") {
+                            String studentsList = Agenda.liststudenti();
+                            System.out.println(studentsList);
+                        } else {
+                            
+                        }
+                    } else {
+                        System.out.println("Formato del comando non corretto.);
+                    }
+
                     break;
 
                 case "insstudente":
@@ -59,15 +69,15 @@ public class App {
                         System.out.println("Formato del comando non corretto. Utilizzo corretto: insstudente <Nome> ecc");
                     }
                     break;
- 
+
                 case "modstudente":
-                    if(shellArgs!= null && shellArgs.length == 4){
+                    if (shellArgs != null && shellArgs.length == 4) {
                         String message = Agenda.modstudente(shellArgs[0], shellArgs[1], shellArgs[2], shellArgs[3]);
                         System.out.println(message);
                     }
                     break;
                 case "delstudente":
-                    if(shellArgs != null && shellArgs.length == 1){
+                    if (shellArgs != null && shellArgs.length == 1) {
                         String message = Agenda.delstudente(shellArgs[0]);
                         System.out.println(message);
                     }
@@ -86,7 +96,7 @@ public class App {
                 default:
                     // Utilizzo lo stato 1 per un'uscita anomala
                     System.out.println("comando non valido");
-                    //System.exit(1);
+                    // System.exit(1);
                     break;
             }
 

@@ -27,9 +27,14 @@ public class Agenda {
         return bellalista(classes);
     }
 
-    public String liststudenti() {
+    public String liststudenti(String classe) {
         JsonAPI jsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
         JSONArray studenti = jsonAPI.getData();
+        if(classe!="all"){
+            for(int i=0; i<studenti.size(); i++){
+                //crea scrematura studenti
+            }
+        }
         return bellalista(studenti);
     }
 
@@ -122,9 +127,7 @@ public class Agenda {
                     objStudent.put("cognome", cognome);
                     objStudent.put("classe", classe);
                 }
-            }/*  else {
-                newStudenti.add(objStudent);
-            } */
+            }
         }
         String message = "studente modificato!";
         if(flagStudent){
