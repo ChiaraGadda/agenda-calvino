@@ -33,7 +33,7 @@ public class Studente {
 
         return "Inserimento completato!";
     }
-    public void modStudente(){
-
+    public String getClasse(){
+        return classe;
     }
 }

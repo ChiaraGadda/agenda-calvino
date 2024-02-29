@@ -49,16 +49,10 @@ public class App {
 
                 case "liststudenti":
                     if (shellArgs != null && shellArgs.length == 1) {
-                        if (shellArgs[0] == "all") {
-                            String studentsList = Agenda.liststudenti();
-                            System.out.println(studentsList);
-                        } else {
-                            
-                        }
+                        System.out.println(Agenda.liststudenti(shellArgs[0]));
                     } else {
-                        System.out.println("Formato del comando non corretto.);
+                        System.out.println("Formato del comando non corretto.");
                     }
-
                     break;
 
                 case "insstudente":

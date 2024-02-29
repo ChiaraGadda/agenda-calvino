@@ -6,12 +6,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Agenda {
-    Map<String,JsonAPI> InstancesJsonAPI = new HashMap<String,JsonAPI>();
+    Map<String, JsonAPI> InstancesJsonAPI = new HashMap<String, JsonAPI>();
 
     public Agenda() {
         System.out.println("*");
-       // InstancesJsonAPI = new HashMap<>();
-        InstancesJsonAPI.put("classes", new JsonAPI("classes"/* , "denominazione"*/));
+        // InstancesJsonAPI = new HashMap<>();
+        InstancesJsonAPI.put("classes", new JsonAPI("classes"/* , "denominazione" */));
         InstancesJsonAPI.put("students", new JsonAPI("students"/* , "codiceFisc" */));
     }
 
@@ -28,12 +28,18 @@ public class Agenda {
     }
 
     public String liststudenti(String classe) {
-        JsonAPI jsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
-        JSONArray studenti = jsonAPI.getData();
-        if(classe!="all"){
-            for(int i=0; i<studenti.size(); i++){
-                //crea scrematura studenti
+        JsonAPI studenteJsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
+        JSONArray studenti = (JSONArray) studenteJsonAPI.getData();
+        JSONArray newStudenti = new JSONArray();
+        if (classe != "all") {
+            for (int i = 0; i < studenti.size(); i++) {
+                JSONObject objStudent = (JSONObject) studenti.get(i);
+                String studClass = (String) objStudent.get("classeFreq");
+                if (studClass != null && studClass.equals(classe)) {
+                    newStudenti.add(objStudent);
+                }
             }
+            return bellalista(newStudenti);
         }
         return bellalista(studenti);
     }
@@ -77,29 +83,29 @@ public class Agenda {
 
         return "Cancellazione fallita... Studente presente che afferisce alla classe!";
     }
-    
-    public String modclasse(String denominazione, String codiceAula){
+
+    public String modclasse(String denominazione, String codiceAula) {
         JsonAPI classesJsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
         JSONArray classi = (JSONArray) classesJsonAPI.getData();
-        
+
         boolean flagEditing = false;
-        for(int i=0; i<classi.size(); i++){
+        for (int i = 0; i < classi.size(); i++) {
             JSONObject objClass = (JSONObject) classi.get(i);
-            if(objClass.get("denominazione").equals(denominazione)){
-                flagEditing=true;
+            if (objClass.get("denominazione").equals(denominazione)) {
+                flagEditing = true;
                 objClass.put("codiceAula", codiceAula);
                 break;
             }
         }
-        String message= "classe non trovata";
-        if(flagEditing){
+        String message = "classe non trovata";
+        if (flagEditing) {
             message = "classe modificata!";
             classesJsonAPI.updateJsonFile(classi);
         }
         return message;
     }
 
-    public String modstudente (String codFisc, String cognome, String nome, String classe){
+    public String modstudente(String codFisc, String cognome, String nome, String classe) {
         JsonAPI classesJsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
         JSONArray classi = (JSONArray) classesJsonAPI.getData();
 
@@ -110,9 +116,9 @@ public class Agenda {
 
         boolean flagClasse = false;
         boolean flagStudent = false;
-        for(int i=0; i<studenti.size(); i++){
+        for (int i = 0; i < studenti.size(); i++) {
             JSONObject objStudent = (JSONObject) studenti.get(i);
-            if(objStudent.get("codFisc").equals(codFisc)){
+            if (objStudent.get("codFisc").equals(codFisc)) {
                 flagStudent = true;
                 for (int j = 0; j < classi.size(); j++) {
                     JSONObject objClass = (JSONObject) classi.get(j);
@@ -122,7 +128,7 @@ public class Agenda {
                         break;
                     }
                 }
-                if(flagClasse){
+                if (flagClasse) {
                     objStudent.put("nome", nome);
                     objStudent.put("cognome", cognome);
                     objStudent.put("classe", classe);
@@ -130,62 +136,62 @@ public class Agenda {
             }
         }
         String message = "studente modificato!";
-        if(flagStudent){
-            if(!flagClasse){
+        if (flagStudent) {
+            if (!flagClasse) {
                 message = "classe inesistente";
-            }else{
+            } else {
                 studentsJsonAPI.updateJsonFile(studenti);
             }
-        }else{
-            message= "studente non trovato";
+        } else {
+            message = "studente non trovato";
         }
         return message;
     }
 
-    public String delstudente(String codFisc){
+    public String delstudente(String codFisc) {
         JsonAPI studentsJsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
         JSONArray /* <JSONObject> */ newStudenti = new JSONArray /* <JSONObject> */();
-        //ArrayList <Integer> newstudneti = new ArrayList <Integer>();
+        // ArrayList <Integer> newstudneti = new ArrayList <Integer>();
         JSONArray studenti = (JSONArray) studentsJsonAPI.getData();
-        for(int i=0; i<studenti.size(); i++){
+        for (int i = 0; i < studenti.size(); i++) {
             JSONObject objStudent = (JSONObject) studenti.get(i);
-            if(!objStudent.get("codFisc").equals(codFisc)){
+            if (!objStudent.get("codFisc").equals(codFisc)) {
                 newStudenti.add(objStudent);
             }
         }
         String message = "studente inesistente"; // message = "studente eliminato!";
-        if(newStudenti.size()!=studenti.size()){
+        if (newStudenti.size() != studenti.size()) {
             studentsJsonAPI.updateJsonFile(newStudenti);
             message = "studente eliminato!";
         }
         return message;
     }
 
-    public String insstudente(String cognome, String nome, String codFisc, String classe){
+    public String insstudente(String cognome, String nome, String codFisc, String classe) {
         Boolean classExist = false;
         JsonAPI classesJsonAPI = (JsonAPI) InstancesJsonAPI.get("classes");
         JSONArray classes = (JSONArray) classesJsonAPI.getData();
-        for(int i=0; i<classes.size(); i++){
+        for (int i = 0; i < classes.size(); i++) {
             JSONObject objClass = (JSONObject) classes.get(i);
             String denominazione = (String) objClass.get("denominazione");
-            if(denominazione.equals(classe)){
-                classExist=true;
+            if (denominazione.equals(classe)) {
+                classExist = true;
                 break;
             }
         }
-        if(!classExist)
+        if (!classExist)
             return "ERRORE: la classe non esiste";
-        
+
         JsonAPI studenteJsonAPI = (JsonAPI) InstancesJsonAPI.get("students");
         JSONArray studenti = (JSONArray) studenteJsonAPI.getData();
-        for(int i=0; i<studenti.size(); i++){
+        for (int i = 0; i < studenti.size(); i++) {
             JSONObject objStudent = (JSONObject) studenti.get(i);
-            if(codFisc.equals(objStudent.get("codFisc"))){
+            if (codFisc.equals(objStudent.get("codFisc"))) {
                 return "ERRORE: studente duplicato";
             }
         }
 
-        Studente s1=new Studente(nome, cognome, codFisc, classe, studenteJsonAPI);
+        Studente s1 = new Studente(nome, cognome, codFisc, classe, studenteJsonAPI);
         s1.insStudente();
         return "Studente inserito";
     }
@@ -200,30 +206,30 @@ public class Agenda {
     }
 
     // private String bellalista(JSONArray jsonArray){
-    //     String stringa="[";
-    //     if(jsonArray.size()>0){
-    //         stringa+= "\n";
-    //     }
-    //     for(int i=0; i<jsonArray.size(); i++){
-    //         JSONObject objClass = (JSONObject) jsonArray.get(i);
-    //         stringa+=("\t"+objClass.toString()+",\n");
-    //     }
-    //     if(jsonArray.size()>0){
-    //         stringa+=(stringa.substring(0, stringa.length() - 1)+"\n");
-    //     }
-    //     return stringa+"]";
+    // String stringa="[";
+    // if(jsonArray.size()>0){
+    // stringa+= "\n";
+    // }
+    // for(int i=0; i<jsonArray.size(); i++){
+    // JSONObject objClass = (JSONObject) jsonArray.get(i);
+    // stringa+=("\t"+objClass.toString()+",\n");
+    // }
+    // if(jsonArray.size()>0){
+    // stringa+=(stringa.substring(0, stringa.length() - 1)+"\n");
+    // }
+    // return stringa+"]";
     // }
 
-    private String bellalista(JSONArray jsonArray){
-        if(jsonArray.size()==0){
+    private String bellalista(JSONArray jsonArray) {
+        if (jsonArray.size() == 0) {
             return "[]";
         }
-        String stringa="[\n";
-        for(int i=0; i<jsonArray.size(); i++){
+        String stringa = "[\n";
+        for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject objClass = (JSONObject) jsonArray.get(i);
-            stringa+=("\t"+objClass.toString()+",\n");
+            stringa += ("\t" + objClass.toString() + ",\n");
         }
-        stringa=stringa.substring(0, stringa.length() - 2);
-        return (stringa+"\n]");
+        stringa = stringa.substring(0, stringa.length() - 2);
+        return (stringa + "\n]");
     }
 }
